@@ -1,14 +1,14 @@
 {
   "development": {
-    "username": "",
-    "password": "",
+    "username": "Paulina",
+    "password": "figo1502",
     "database": "bookmark_manager_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "",
-    "password": "",
+    "username": "Paulina",
+    "password": "figo1502",
     "database": "bookmark_manager_test",
     "host": "127.0.0.1",
     "dialect": "postgres"

@@ -3,9 +3,10 @@ const express = require('express');
 const bookmarksRouter = express.Router();
 
 const { Bookmark } = require('../models');
+const { Comment } = require('../models');
 
 bookmarksRouter.get('/', async (req, res) => {
-    const bookmarks = await Bookmark.findAll();
+    const bookmarks = await Bookmark.findAll({include: Comment});
     
     res.render('bookmarks/index', {
         bookmarks: bookmarks,
@@ -29,15 +30,13 @@ bookmarksRouter.post('/', async (req, res) => {
     let comment = req.body.comment
     let tags = req.body.tags
 
-    console.log(comment)
-
     await Bookmark.create({
         url: url, 
         comments: comment, 
         tags: tags
     })
 
-    const bookmarks = await Bookmark.findAll();
+    const bookmarks = await Bookmark.findAll({include: Comment});
     
     res.render('bookmarks/index', {
         bookmarks: bookmarks,
@@ -53,7 +52,7 @@ bookmarksRouter.delete('/:bookmarkId', async (req, res) => {
         }
     })
 
-    const bookmarks = await Bookmark.findAll();
+    const bookmarks = await Bookmark.findAll({include: Comment});
 
     res.render('bookmarks/index', {
         bookmarks: bookmarks,
@@ -70,7 +69,7 @@ bookmarksRouter.put('/:bookmarkId', async (req, res) => {
         }
     })
 
-    const bookmarks = await Bookmark.findAll();
+    const bookmarks = await Bookmark.findAll({include: Comment});
 
     res.render('bookmarks/index', {
         bookmarks: bookmarks,

@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 const truncateTables = require('../../database-cleaner.js')
+const seedDatabase = require('../../database-seed.js')
 
 module.exports = (on, config) => {
   on('task', {
@@ -9,5 +10,11 @@ module.exports = (on, config) => {
       truncateTables()
       return null
     },
+
+    seedDb() {
+      console.log('running seedDb task')
+      seedDatabase()
+      return null
+    }
   })
 }

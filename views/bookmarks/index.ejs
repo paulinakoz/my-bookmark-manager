@@ -9,8 +9,6 @@
 <body>
     <form method="POST" action="/">
         <input id="url" name="url" type="text" placeholder="Url...">
-        <input id="comment" name="comment" type="text" placeholder="Comment...">
-        <input id="tags" name="tags" type="text" placeholder="Tags..." >
         <input id="submit-button" type="submit" value="Submit Bookmark">
     </form>
     <table>
@@ -21,12 +19,15 @@
                 <% bookmarks.forEach((bookmark, index) => { %>
                     <tr>  
                         <td id="bookmark-url-<%= index %>"><%= bookmark.url %></td>
-                        <td id="bookmark-comment-<%= index %>"><%= bookmark.comments %></td>
+                        <% bookmark.Comments.forEach((comment, commentIndex) => { %>
+                            <td id="bookmark-<%= index %>-comment-<%= commentIndex %>"><%= comment.text %> <i>commented at <%= comment.date() %></i></td>
+                        <% }) %>
                         <td id="bookmark-tags-<%= index %>"><%= bookmark.tags %></td>
                         <td>
                             <form action="/<%= bookmark.id %>?_method=DELETE" method="post">
                                 <a id="edit-bookmark-<%= index %>" href="/<%= bookmark.id %>/edit">Edit</a>
                                 <input id="delete-bookmark-<%= index %>" type="submit" value="Delete">
+                                <a id="bookmark-<%= index %>-add-comment" href="/<%= bookmark.id %>/comments/new">Add comment</a>
                             </form>
                         </td>
                     </tr>
