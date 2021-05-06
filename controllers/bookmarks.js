@@ -4,9 +4,11 @@ const bookmarksRouter = express.Router();
 
 const { Bookmark } = require('../models');
 const { Comment } = require('../models');
+const { Tag } = require('../models');
+const { BookmarkTag } = require('../models');
 
 bookmarksRouter.get('/', async (req, res) => {
-    const bookmarks = await Bookmark.findAll({include: Comment});
+    const bookmarks = await Bookmark.findAll({ include: { all: true }});
     
     res.render('bookmarks/index', {
         bookmarks: bookmarks,
@@ -26,54 +28,44 @@ bookmarksRouter.get('/:bookmarkId/edit', async (req, res) => {
 });
 
 bookmarksRouter.post('/', async (req, res) => {
-    let url = req.body.url
-    let comment = req.body.comment
-    let tags = req.body.tags
+    const tags = await Promise.all(tagNames.map(tagName => Tag.findOrCreate({
+        where: { 
+            name: tagName 
+        }
+    })));
 
-    await Bookmark.create({
-        url: url, 
-        comments: comment, 
-        tags: tags
-    })
+    const bookmark = await Bookmark.create({ 
+        url: req.body.url 
+    });
 
-    const bookmarks = await Bookmark.findAll({include: Comment});
-    
-    res.render('bookmarks/index', {
-        bookmarks: bookmarks,
-    });  
-})
+    tags.forEach(tag => tag[0].addBookmark(bookmark));
+
+    res.redirect('/');
+});
 
 bookmarksRouter.delete('/:bookmarkId', async (req, res) => {
-    const id = req.params.bookmarkId
+    const id = req.params.bookmarkId;
 
     await Bookmark.destroy({
         where: {
            id: id
         }
-    })
+    });
 
-    const bookmarks = await Bookmark.findAll({include: Comment});
-
-    res.render('bookmarks/index', {
-        bookmarks: bookmarks,
-    }); 
-})
+    res.redirect('/');  
+});
 
 bookmarksRouter.put('/:bookmarkId', async (req, res) => {
-    const id = req.params.bookmarkId
+    const id = req.params.bookmarkId;
 
     await Bookmark.update(
         {url: req.body.url},
         {where: {
             id: id
         }
-    })
+    });
 
-    const bookmarks = await Bookmark.findAll({include: Comment});
-
-    res.render('bookmarks/index', {
-        bookmarks: bookmarks,
-    }); 
-})
+    res.redirect('/');
+});
 
 module.exports = bookmarksRouter;

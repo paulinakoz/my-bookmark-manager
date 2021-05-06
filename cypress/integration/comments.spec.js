@@ -2,7 +2,7 @@ describe("Comments", function() {
     beforeEach(function() {
       cy.task("resetDb")
       cy.task("seedDb")
-      cy.visit('/bookmarks')
+      cy.visit('/')
     })
   
     it("A bookmark has comments that have timestamps", function() {
